@@ -1,3 +1,16 @@
 Jumlah_Kehamilan,Glukosa,Tekanan_Darah,Ketebalan_Kulit,Insulin,BMI,Riwayat_Keluarga,Usia,Prediksi,Probabilitas,Faktor_Terkuat_1,Faktor_Terkuat_2,Faktor_Terkuat_3
 4,140,120,24,89,35.5,0.8,44,🟥 Positif Diabetes,0.553910349252223,Tekanan_Darah,Glukosa,Insulin
 3,122,78,25,85,29.53,0.8,36,🟩 Negatif Diabetes,0.3418050447985275,Insulin,Riwayat_Keluarga,BMI
+2,130,80,30,87,28.5,0.5,40,🟩 Negatif Diabetes,0.365947352919804,Insulin,BMI,Glukosa
+2,125,75,24,70,29.3,0.6,45,🟩 Negatif Diabetes,0.3238923246025348,Insulin,Usia,Ketebalan_Kulit
+2,150,80,35,120,35.0,0.6,40,🟥 Positif Diabetes,0.5845454266035244,Glukosa,BMI,Jumlah Kehamilan
+1,140,85,30,100,32.0,0.5,35,🟩 Negatif Diabetes,0.3564180691067759,Glukosa,Jumlah Kehamilan,Tekanan Darah
+1,90,70,20,60,25.0,0.3,30,🟩 Negatif Diabetes,0.043796844222156975,Glukosa,BMI,Jumlah Kehamilan
+3,160,90,40,150,38.0,0.7,45,🟥 Positif Diabetes,0.7530558834402922,Glukosa,BMI,Tekanan Darah
+0,80,65,15,50,22.0,0.2,25,🟩 Negatif Diabetes,0.019330431158950553,Glukosa,BMI,Jumlah Kehamilan
+2,100,75,25,70,27.0,0.4,33,🟩 Negatif Diabetes,0.08630819488550094,Glukosa,BMI,Jumlah Kehamilan
+1,85,68,18,55,23.0,0.3,28,🟩 Negatif Diabetes,0.03066340487789178,Glukosa,BMI,Jumlah Kehamilan
+4,170,95,45,180,40.0,0.8,50,🟥 Positif Diabetes,0.8639131065122567,Glukosa,BMI,Tekanan Darah
+2,155,88,38,130,36.0,0.6,42,🟥 Positif Diabetes,0.6364370032825167,Glukosa,BMI,Jumlah Kehamilan
+0,95,72,22,65,26.0,0.4,31,🟩 Negatif Diabetes,0.054488110545777846,Glukosa,BMI,Jumlah Kehamilan
+5,180,100,50,200,45.0,1.0,55,🟥 Positif Diabetes,0.949593240030418,Glukosa,BMI,Riwayat Keluarga
