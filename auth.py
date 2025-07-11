@@ -33,7 +33,6 @@ def register_user(nama, username, password, role='user'):
     finally:
         conn.close()
 
-
 def login_user(username, password):
     try:
         conn = get_connection()
@@ -42,8 +41,9 @@ def login_user(username, password):
         user = cursor.fetchone()
 
         if user:
-            stored_hash = user[3]  # kolom password sebagai string
-            if bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode()):
+            stored_hash = user[3]  # kolom password
+            # Pastikan tipe cocok (str atau bytes)
+            if bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode('utf-8') if isinstance(stored_hash, str) else stored_hash):
                 return True, {
                     'id': user[0],
                     'nama_lengkap': user[1],
