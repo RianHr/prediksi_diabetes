@@ -43,8 +43,7 @@ PREDIKSI_DIABETES/
 │   ├── db_config.py        # Konfigurasi database
 │   ├── evaluasi_model.py   # Evaluasi model
 │   ├── pelatihan_model.py  # Pelatihan model
-│   ├── preprocessing.py    # Pembersihan dan normalisasi data
-│   └── visualisasi.py      # Visualisasi data dan model
+│   └── preprocessing.py    # Pembersihan dan normalisasi data
 ├── main.py                  # Titik masuk program berbasis Streamlit
 ├── README.md
 └── requirements.txt         # Daftar pustaka Python
@@ -107,10 +106,9 @@ streamlit run main.py
 |----|-----------------------------------|--------------------------------------------|
 | 1  | Prediksi Diabetes untuk Data Baru | Input data pasien, prediksi, dan simpan hasil |
 | 2  | Lihat Evaluasi Model              | Tampilkan akurasi, ROC AUC, dan matriks konfusi |
-| 3  | Lihat Visualisasi                 | Grafik seperti confusion matrix dan ROC curve |
-| 4  | Informasi Dataset                 | Statistik dan distribusi kelas pasien       |
-| 5  | Lihat Hasil Prediksi Sebelumnya   | Riwayat prediksi dari file CSV             |
-| 6  | Keluar                            | Keluar dari aplikasi (khusus CLI jika ada) |
+| 3  | Informasi Dataset                 | Statistik dan distribusi kelas pasien       |
+| 4  | Lihat Hasil Prediksi Sebelumnya   | Riwayat prediksi dari file CSV             |
+| 5  | Keluar                            | Keluar dari aplikasi (khusus CLI jika ada) |
 
 **Catatan**: Menu ini diakses melalui dashboard Streamlit setelah login. Admin memiliki akses tambahan untuk mengelola pengguna.
 
