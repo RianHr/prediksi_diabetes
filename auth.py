@@ -1,4 +1,3 @@
-# auth.py
 from db_config import get_connection
 from datetime import datetime
 import bcrypt
@@ -19,7 +18,7 @@ def register_user(nama, username, password, role='user'):
         if cursor.fetchone():
             return False, "❌ Username sudah digunakan."
 
-        # Hash password
+        # Hash password (disimpan sebagai string UTF-8)
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         # Simpan ke DB
@@ -43,8 +42,8 @@ def login_user(username, password):
         user = cursor.fetchone()
 
         if user:
-            stored_hash = user[3]  # kolom password
-            if bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode('utf-8')):
+            stored_hash = user[3]  # kolom password sebagai string
+            if bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode()):
                 return True, {
                     'id': user[0],
                     'nama_lengkap': user[1],
