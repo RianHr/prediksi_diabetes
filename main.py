@@ -85,89 +85,11 @@ def halaman_registrasi():
 # Fungsi logout
 def tombol_logout():
     if st.sidebar.button("Keluar", key="sidebar_logout_button"):
-        st.session_state.show_logout_popup = True
-
-    if st.session_state.show_logout_popup:
-        st.markdown(
-            """
-            <style>
-            .logout-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.7);
-                z-index: 999;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .logout-popup {
-                background-color: #1e293b;
-                padding: 15px;
-                border-radius: 5px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-                width: 250px;
-                text-align: center;
-                z-index: 1000;
-                border: 1px solid #334155;
-            }
-            .logout-title {
-                color: #f1f5f9;
-                margin-bottom: 10px;
-                font-size: 1.1em;
-            }
-            .logout-text {
-                color: #d1d5db;
-                margin-bottom: 15px;
-            }
-            .logout-buttons {
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-            }
-            .btn-yes {
-                background-color: #10b981;
-                color: #f1f5f9;
-                padding: 6px 12px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .btn-no {
-                background-color: #ef4444;
-                color: #f1f5f9;
-                padding: 6px 12px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-        with st.expander("Konfirmasi Keluar", expanded=True):
-            st.markdown('<p class="logout-text">Apakah Anda yakin ingin keluar?</p>', unsafe_allow_html=True)
-            col1, col2 = st.columns([1, 1])
-            with col1:
-                if st.button("Ya, Keluar", key="btn_yes", on_click=lambda: confirm_logout()):
-                    st.session_state.show_logout_popup = False
-                    st.rerun()
-            with col2:
-                if st.button("Batal", key="btn_no", on_click=lambda: cancel_logout()):
-                    st.session_state.show_logout_popup = False
-                    st.rerun()
-
-def confirm_logout():
-    st.session_state.status_login = False
-    st.session_state.nama = ""
-    st.session_state.role = ""
-    st.session_state.halaman = "login"
-    st.session_state.show_login_popup = False
-
-def cancel_logout():
-    pass
+        st.session_state.status_login = False
+        st.session_state.nama = ""
+        st.session_state.role = ""
+        st.session_state.halaman = "login"
+        st.experimental_rerun()
 
 # Fungsi dashboard user
 def show_user_dashboard():
@@ -239,10 +161,10 @@ def tampilkan_form_prediksi():
         dampak = [(fitur[i], data_scaled[0][i] * koef[i]) for i in range(len(fitur))]
         dampak = sorted(dampak, key=lambda x: abs(x[1]), reverse=True)
         top_features = []
-        for i, (fitur, skor) in enumerate(dampak[:3]):
+        for i, (ftr, skor) in enumerate(dampak[:3]):
             arah = "meningkatkan" if skor > 0 else "menurunkan"
-            st.write(f"{i+1}. **{fitur}**: {arah} risiko diabetes (kontribusi: `{skor:.4f}`)")
-            top_features.append(fitur)
+            st.write(f"{i+1}. **{ftr}**: {arah} risiko diabetes (kontribusi: `{skor:.4f}`)")
+            top_features.append(ftr)
 
         hasil_df = pd.DataFrame([{
             "Jumlah Kehamilan": kehamilan,
@@ -304,14 +226,21 @@ def show_admin_dashboard():
     search_query = st.text_input("🔍 Cari Pengguna (Nama atau Nama Pengguna)")
     try:
         conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         if search_query:
-            cursor.execute("SELECT nama_lengkap, username, role, tanggal_daftar FROM pengguna WHERE nama_lengkap LIKE %s OR username LIKE %s ORDER BY tanggal_daftar DESC", (f"%{search_query}%", f"%{search_query}%"))
+            cursor.execute("""
+                SELECT nama_lengkap, username, role, tanggal_daftar
+                FROM pengguna
+                WHERE nama_lengkap LIKE ? OR username LIKE ?
+                ORDER BY tanggal_daftar DESC
+            """, (f"%{search_query}%", f"%{search_query}%"))
         else:
-            cursor.execute("SELECT nama_lengkap, username, role, tanggal_daftar FROM pengguna ORDER BY tanggal_daftar DESC")
+            cursor.execute("""
+                SELECT nama_lengkap, username, role, tanggal_daftar
+                FROM pengguna
+                ORDER BY tanggal_daftar DESC
+            """)
         users = cursor.fetchall()
-        cursor.close()
-        conn.close()
     except Exception as e:
         st.error(f"❌ Gagal memuat data pengguna: {e}")
         users = []
@@ -323,55 +252,8 @@ def show_admin_dashboard():
                 st.write(f"**🧾 Nama Pengguna:** `{user['username']}`")
                 st.write(f"**🔑 Peran:** `{user['role']}`")
                 st.write(f"**🕒 Terdaftar:** {user['tanggal_daftar']}")
-                with st.form(key=f"edit_{user['username']}"):
-                    new_nama = st.text_input("Nama Baru", value=user['nama_lengkap'])
-                    new_role = st.selectbox("Peran Baru", ["user", "admin"], index=0 if user['role'] == "user" else 1)
-                    edit_submit = st.form_submit_button("💾 Simpan Perubahan")
-                    if edit_submit:
-                        conn = get_connection()
-                        cursor = conn.cursor()
-                        cursor.execute("""
-                            UPDATE pengguna SET nama_lengkap = %s, role = %s WHERE username = %s
-                        """, (new_nama, new_role, user['username']))
-                        conn.commit()
-                        cursor.close()
-                        conn.close()
-                        st.success(f"✅ Data {new_nama} diperbarui.")
-                        st.rerun()
-                if st.button("❌ Hapus", key=f"hapus_{user['username']}"):
-                    conn = get_connection()
-                    cursor = conn.cursor()
-                    cursor.execute("DELETE FROM pengguna WHERE username = %s", (user['username'],))
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
-                    st.success(f"✅ Pengguna {user['nama_lengkap']} dihapus.")
-                    st.rerun()
     else:
         st.info("Belum ada pengguna terdaftar atau tidak ditemukan.")
-
-    st.subheader("➕ Tambah Pengguna Baru")
-    with st.form("tambah_pengguna"):
-        nama = st.text_input("Nama Lengkap")
-        username = st.text_input("Nama Pengguna")
-        password = st.text_input("Kata Sandi", type="password")
-        role = st.selectbox("Peran", ["user", "admin"])
-        submit = st.form_submit_button("Tambah")
-        if submit:
-            if not nama or not username or not password:
-                st.error("Semua kolom wajib diisi.")
-            else:
-                conn = get_connection()
-                cursor = conn.cursor()
-                cursor.execute("""
-                    INSERT INTO pengguna (nama_lengkap, username, password, role, tanggal_daftar)
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (nama, username, password, role, datetime.now()))
-                conn.commit()
-                cursor.close()
-                conn.close()
-                st.success(f"✅ Pengguna {nama} ditambahkan.")
-                st.rerun()
 
 # TAMPILAN UTAMA
 if __name__ == "__main__":

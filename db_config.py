@@ -1,16 +1,11 @@
-import mysql.connector
-from mysql.connector import Error
+# db_config.py
+import sqlite3
+import os
 
 def get_connection():
-    try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="prediksi_diabetes"
-        )
-        if connection.is_connected():
-            return connection
-    except Error as e:
-        print(f"❌ Gagal terkoneksi ke database: {e}")
-        return None
+    # Pastikan folder "data/" ada, jika belum maka buat
+    os.makedirs("data", exist_ok=True)
+
+    # Buat atau buka database SQLite
+    conn = sqlite3.connect("data/prediksi_diabetes.db", check_same_thread=False)
+    return conn
